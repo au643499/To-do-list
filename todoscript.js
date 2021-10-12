@@ -46,10 +46,10 @@ window.onload = function() {
         if(status === "checked"){
             chbox.checked = true;
         }
-        chbox.addEventListener("click", function(){
-            var txt = chbox.parentElement.innerText;
-            var key = txt.substring(0, txt.length-3);
+        chbox.addEventListener("click", function(e){
+            var key = e.target.nextElementSibling.innerText;
             var value = localStorage.getItem(key);
+            console.log(key);
             if(value === "unchecked") {
                 localStorage.setItem(key, "checked");
             } else {
@@ -84,8 +84,9 @@ window.onload = function() {
         var txt = document.createTextNode("DEL");
         delBtn.id = "delBtn";
         delBtn.addEventListener("click", function(e) {
-            var txt = e.target.previousElementSibling.innerText;
-            localStorage.removeItem(txt);
+            var key = e.target.previousElementSibling.innerText;
+            localStorage.removeItem(key);
+            console.log(key);
             window.location.reload();
         });
         delBtn.appendChild(txt);
