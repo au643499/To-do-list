@@ -43,6 +43,7 @@ window.onload = function() {
     function addCheckbox(listElement, status) {
         var chbox = document.createElement("input");
         chbox.type = "checkbox";
+        chbox.id = "chbox";
         if(status === "checked"){
             chbox.checked = true;
         }
@@ -63,6 +64,7 @@ window.onload = function() {
     function addInput(listElement, input) {
         var txt = document.createTextNode(input);
         var p = document.createElement("p");
+        p.id = "txt";
         p.appendChild(txt); 
         p.addEventListener("click", function(e) {
             var oldtxt = e.target.innerText;
