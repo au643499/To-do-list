@@ -1,6 +1,25 @@
 
 window.onload = function() {
 
+    var addList = document.getElementById("newListBtn");
+    addList.addEventListener("click", newList);
+
+    function newList() {
+        var listName = document.getElementById("inpNewList").value;
+        var listBox = document.createElement("div");
+        var header = document.createElement("H2");
+        header.innerText = listName;
+        listBox.appendChild(header);
+        var container = document.getElementById("cointainer");
+        container.appendChild(listBox);
+    }
+
+
+
+
+
+
+
     for (let i = 0; i < localStorage.length; i++) {
         let input = localStorage.key(i);
         let status = localStorage.getItem(input);

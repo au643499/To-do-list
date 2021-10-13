@@ -17,6 +17,27 @@ body{
 
 }
 
+.sidenav {
+    height: 100%; /* Full-height: remove this if you want "auto" height */
+    width: 160px; /* Set the width of the sidebar */
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color:grey;
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px;
+  }
+
+#newList {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 10px;
+    color: #818181;
+    display: block;
+    width: 100px;
+}
+
 button{
     background-color:#85AEDE;
     color:white;
@@ -24,6 +45,7 @@ button{
     border-color:#85AEDE;
     height: 42px;
     width: 42px;
+    display: inline-block;
 }
 
 button:hover{
@@ -45,6 +67,7 @@ ul{
     list-style-type: none;
     margin-left: 85px;
     width: 555px;
+    display: inline-block;
 }
 
 li:hover{
