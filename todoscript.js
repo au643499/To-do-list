@@ -1,6 +1,76 @@
-
 window.onload = function() {
 
+    for (let i = 0; i < localStorage.length; i++) {
+        let listName = localStorage.key(i);
+        createList(listName);
+    }
+
+    // Eventlistener on newListBtn on mouseclick
+    var addList = document.getElementById("newListBtn");
+    addList.addEventListener("click", newList);
+
+    // Eventlistener on newListBtn on "enter"
+    var input = document.getElementById("newListBtn");
+    input.addEventListener("keyup", function(event) {
+        if(event.keyCode === 13) {
+            event.preventDefault();
+            addBtn.click();
+        }
+    });
+
+    function newList() {
+        var listName = document.getElementById("inpNewList").value;
+        let todos = []; // Man kan godt gemme tupler i array {true, "Hente mælk"}
+        localStorage.setItem(listName, JSON.stringify(todos));
+        location.reload(); // Generate the window, with the added list
+    }
+
+    function createList(listName) {
+        //generateMenuButton(listName);
+        showList(listName);
+    }
+
+    function showList(listName) {    
+        var listBox = document.createElement("div");
+        listBox.id=listName
+        var header = document.createElement("H2");
+        header.innerText = listName;
+        listBox.appendChild(header);
+
+        
+        
+        var listContainer = document.getElementById('listContainer');
+        listContainer.appendChild(listBox);
+
+        addInputBar(listName)
+    }
+
+
+    function addInputBar(listName) {
+        var todoList = document.getElementById(listName);
+
+        var inpToDo = document.createElement("input");
+        inpToDo.id = "inpToDo";
+        inpToDo.type = "text";
+        inpToDo.placeholder = "New to-do...";
+        todoList.appendChild(inpToDo);
+
+        var newToDoBtn = document.createElement("button");
+        newToDoBtn.id = "newToDoBtn";
+        newToDoBtn.type = "button";
+        newToDoBtn.innerHTML = "+";
+        todoList.appendChild(newToDoBtn);
+    }
+
+
+
+
+
+
+
+
+
+/*
     for (let i = 0; i < localStorage.length; i++) {
         let input = localStorage.key(i);
         let status = localStorage.getItem(input);
@@ -43,7 +113,7 @@ window.onload = function() {
     function addCheckbox(listElement, status) {
         var chbox = document.createElement("input");
         chbox.type = "checkbox";
-        chbox.id = "chbox";
+        chbox.id = "chbox"
         if(status === "checked"){
             chbox.checked = true;
         }
@@ -64,11 +134,11 @@ window.onload = function() {
     function addInput(listElement, input) {
         var txt = document.createTextNode(input);
         var p = document.createElement("p");
-        p.id = "txt";
+        p.id = "txt"
         p.appendChild(txt); 
         p.addEventListener("click", function(e) {
             var oldtxt = e.target.innerText;
-            var newtxt = prompt("Change to do to");
+            var newtxt = prompt("Change to do to", oldtxt);
             if(newtxt) {
                 e.target.innerText = newtxt;
 
@@ -94,5 +164,6 @@ window.onload = function() {
         delBtn.appendChild(txt);
         listElement.appendChild(delBtn);
     }
+    */
     
 }
