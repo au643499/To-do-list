@@ -20,14 +20,27 @@ window.onload = function() {
 
     function newList() {
         var listName = document.getElementById("inpNewList").value;
-        let todos = []; // Man kan godt gemme tupler i array {true, "Hente mælk"}
+        let todos = [true, {checked: true, text: "Hente Gunvor"}]; // det 0 element indikere om en liste skal vises
         localStorage.setItem(listName, JSON.stringify(todos));
         location.reload(); // Generate the window, with the added list
     }
 
     function createList(listName) {
-        //generateMenuButton(listName);
-        showList(listName);
+        generateMenuButton(listName);
+
+        let retrivedTodos = JSON.parse(localStorage.getItem(listName));
+        let show = retrivedTodos[0];
+        if(show) {showList(listName);}
+    }
+
+    function generateMenuButton(listName) {
+        var listBtn = document.createElement("button");
+        listBtn.id = "listBtn";
+        listBtn.type = "button";
+        listBtn.innerHTML = listName;
+
+        var sideNav = document.getElementById("sidenav");
+        sideNav.appendChild(listBtn);
     }
 
     function showList(listName) {    
