@@ -18,8 +18,6 @@ window.onload = function() {
 
 
 
-
-
     for (let i = 0; i < localStorage.length; i++) {
         let input = localStorage.key(i);
         let status = localStorage.getItem(input);
