@@ -1,0 +1,19 @@
+Overall we have tried to implement a simple solution...
+
+You create a new todo list by typing the name of the list in the upper left corner, and then type “enter” or click the “+” button. This creates a new button in the sidebar, under the inputbar, and shows the list on the page. Both of which gives the user direct feedback, and makes it easy to see that a new list has been created. 
+
+The list-buttons in the sidebar is used for several things:
+- It gives the user a fast overview of her lists
+- By clicking the button the list switch between being shown / not shown on the page. This makes it easy to show / don’t show several lists fast, because the buttons are close to each other. The pointer at hover indicates that the buttons have a functionality, and the user will easily learn the function.
+- A todo can be “dropped” at the button, and thereby moved to that list
+
+The design of the shown list are very similar to the one we used for the last assignment, which makes it easy for old users to adapt to the extended version. The inputbar and add button is simlar to those used to create new list, which makes it faster for the user to learn. Type the name of the todo, type “enter” or click the “+” button, and then a new todo is generated.
+
+The todo allso looks very similar to the ones from the old version. There is a checkbox, which most people are familiar with, the text and then a menu-button. The menu-button generates a popout-menu on hover, but can be more permanent if the user clicks the button. This helps if it is difficult to  “stay” in the menu. (It would have been nice if the pop-out menu, was placed a little higher, but we couldn’t get that to worl. That would have made it easier to “stay” in the menu). 
+
+The menu has three functions:
+- edit: which generates a prompt, where you can edit the todo.
+- move: which also generates a prompt, where you can write the name of the list you want to move the 
+- delete: removes the todo
+
+It is also possible to move a todo through direct manipulation by drag-and-drop.

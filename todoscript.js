@@ -118,7 +118,7 @@ window.onload = function() {
         sideNav.appendChild(listBtn);
     }
 
-    // show the list by generating a box at the page
+    // Chow the list by generating a box at the page
     function showList(listName) {
         // Create box    
         var listBox = document.createElement("div");
@@ -137,26 +137,33 @@ window.onload = function() {
         showTodos(listName)
     }
 
-
+    // Create inputbar and add button to create new todos
     function addInputBar(listName) {
         var todoList = document.getElementById(listName);
 
+        // Create inputpar
         var inpToDo = document.createElement("input");
         inpToDo.id = "inpToDo";
         inpToDo.type = "text";
         inpToDo.placeholder = "New to-do...";
+
+        // A todo is saved if user type "enter" while typing in the inputbar
         inpToDo.addEventListener("keyup", function(event) {
             if(event.keyCode === 13) {
                 event.preventDefault();
+                // Calls method which save the todo
                 newToDoBtn.click();
             }
         });
         todoList.appendChild(inpToDo);
 
+        // Create add button
         var newToDoBtn = document.createElement("button");
         newToDoBtn.id = "newToDoBtn";
         newToDoBtn.type = "button";
         newToDoBtn.innerHTML = "+";
+        
+        // Save a new todo if add button is clicked
         newToDoBtn.addEventListener("click", function(e) {
             var listName = e.target.parentElement.firstChild.innerHTML;
             let retrivedTodos = JSON.parse(localStorage.getItem(listName));
@@ -171,10 +178,13 @@ window.onload = function() {
         todoList.appendChild(newToDoBtn);
     }
 
-    
+    // Show todos in a list
     function showTodos(listName) {
+        // retrieve the list of todos
         var todoList = document.getElementById(listName);
         let retrivedTodos = JSON.parse(localStorage.getItem(listName));
+
+        // loop through each todo and show the todo 
         for (let i = 1; i < retrivedTodos.length; i++) {
             var aTodo = document.createElement("div");
             let todo = [retrivedTodos[i].checked, retrivedTodos[i].text]
@@ -189,20 +199,26 @@ window.onload = function() {
         }
     }
 
+    // Generate the checkbox and mark if it checked
     function addCheckbox(listName, listElement, todo, status) {
+        // Create the checkbox
         var chbox = document.createElement("input");
         chbox.type = "checkbox";
         chbox.id = "chbox"
+        
+        // Mark it as chechekd if checked
         if(status === true){
             chbox.checked = true;
         }
 
+        // Stores whether a todo is checked or not
         chbox.addEventListener("click", function(e){
             var retrivedTodos = JSON.parse(localStorage.getItem(listName));
             let newTodo;
             for (let i = 1; i < retrivedTodos.length; i++) {
                 let someTodo = [retrivedTodos[i].checked, retrivedTodos[i].text];
                 if(todo === someTodo[1]) {
+                    // Remove the old information
                     retrivedTodos.splice(i, 1);
                     if(someTodo[0] === true) {
                         newTodo = {checked: false, text: todo};
@@ -212,6 +228,7 @@ window.onload = function() {
                     }
                 }
             }
+            // Stores the new status of the todo
             retrivedTodos.push(newTodo);
             localStorage.setItem(listName, JSON.stringify(retrivedTodos)) 
         });
@@ -219,12 +236,15 @@ window.onload = function() {
         listElement.appendChild(chbox);
     }
 
+    // Generate the text of the todo
     function addInput(listName, listElement, input, status) {
+        // Create the text element
         var txt = document.createTextNode(input);
         var p = document.createElement("p");
         p.id = "txt"
         p.appendChild(txt);
 
+        // Make the text dragable
         p.draggable = true;
         p.addEventListener("dragstart", function(e) {
             e.dataTransfer.setData("txt", input);
@@ -235,22 +255,26 @@ window.onload = function() {
         listElement.appendChild(p);
     } 
 
+    // Generate the menubutton and the popout-menu
     function addMenuButton(listName, listElement, todo, status) {
+        // Create the menuButton
         var menuBtn = document.createElement("div");
         menuBtn.tabIndex = "0;"
         menuBtn.id = "menuBtn";
-
         var txt = document.createTextNode("menu");
         menuBtn.appendChild(txt);
 
+        // Create the popout-menu
         var menuContent = document.createElement("div");
         menuContent.class = "content"
         menuContent.id = "dropDown";
 
+        // Create the edit-button in the popout-menu
         var edit = document.createElement("div");
         edit.id = "menuItem";
         var etxt = document.createTextNode("edit");
         edit.appendChild(etxt)
+        // Make it possible to edit a todo throug a prompt
         edit.addEventListener("click", function() {
             var newtxt = prompt("Change to do to", todo);
             if(newtxt) {
@@ -270,10 +294,12 @@ window.onload = function() {
         });
         menuContent.appendChild(edit);
 
+        // Create the move-button
         var move = document.createElement("div");
         move.id = "menuItem";
         var mtxt = document.createTextNode("move");
         move.appendChild(mtxt);
+        // Make it possible to move a todo throug a prompt
         move.addEventListener("click", function() {
             var newList = prompt("Move to", "Type name of new list here"); //Det ville være nice med dropdown menu her
             let theTodo = {checked: status, text: todo};
@@ -286,10 +312,12 @@ window.onload = function() {
         });
         menuContent.appendChild(move);
 
+        // Create the delete-button
         var remove = document.createElement("div");
         remove.id = "menuItem";
         var rtxt = document.createTextNode("delete");
         remove.appendChild(rtxt);
+        // Make it possible to remove a todo.
         remove.addEventListener("click", function() {
             var retrivedTodos = JSON.parse(localStorage.getItem(listName));
             for (let i = 1; i < retrivedTodos.length; i++) {
@@ -303,9 +331,7 @@ window.onload = function() {
             
         });
         menuContent.appendChild(remove);
-
         menuBtn.appendChild(menuContent);
-
         listElement.appendChild(menuBtn);
     }    
 }
