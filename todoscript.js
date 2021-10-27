@@ -19,27 +19,22 @@ window.onload = function() {
         }
     });
 
-    /* 
-    Saves a new list item to localstorage when newListBtn is activated
-    Generates a name (key) an a list (value), which is stored in localstorage
-    */
+    // Save a new list item to localstorage when newListBtn is activated 
     function newList() {
         var listName = document.getElementById("inpNewList").value;
 
-        // The zero elements is used to tell whether a list is showed
+        // The zero element is used to tell whether a list is showed
         let todos = [true]; 
         
+        // listName is used as key and stored with an array as value
         localStorage.setItem(listName, JSON.stringify(todos));
         
         // Reload the page, with the added list
         location.reload(); 
     }
 
-    /*
-    Create the list on the page
-    Creates a button in the sidebar
-    If the list is shown, show the list on the page
-    */
+    
+    // Create the list on the page with a button in the sidenav and check if the list should be shown
     function createList(listName) {
         generateMenuButton(listName);
 
@@ -59,18 +54,62 @@ window.onload = function() {
 
         // The list switch between being shown/not shown when clicked
         listBtn.addEventListener("click", function(e) {
+            // Retrives the first value in the array of the clicked list, which tells if a list is shown
             var listName = e.target.innerHTML;
             let retrivedTodos = JSON.parse(localStorage.getItem(listName));
             let show = retrivedTodos[0];
-            console.log(show);
+            
+            // Switch the value of shown between true and falls, when clicked
             if(show) {
                 retrivedTodos[0] = false;
             } else {
                 retrivedTodos[0] = true;
             }
-            console.log(retrivedTodos[0]);
             
+            // Save the list, with the updated value
             localStorage.setItem(listName, JSON.stringify(retrivedTodos));
+
+            // Reload the page, to implement the change
+            location.reload();
+        });
+
+        // Make it possible to drop todos 
+        listBtn.addEventListener("dragenter", function(e) {
+            e.preventDefault();
+            listBtn.classList.add("drag-over");
+        });
+        listBtn.addEventListener("dragover", function(e) {
+            e.preventDefault();
+            listBtn.classList.add("drag-over");
+        });
+        listBtn.addEventListener("dragleave", function(e) {
+            listBtn.classList.remove("drag-over");
+        });
+        listBtn.addEventListener("drop", function(e) {
+            listBtn.classList.remove("drag-over");
+            
+            // Retrive data from old todo
+            let todoTxt = e.dataTransfer.getData("txt");
+            let status = e.dataTransfer.getData("status");
+            let oldListName = e.dataTransfer.getData("listName");
+
+            // Save todo in new list
+            let newRetrivedTodos = JSON.parse(localStorage.getItem(listName))
+            let movedTodo = {checked: status, text: todoTxt};
+            newRetrivedTodos.push(movedTodo);
+            localStorage.setItem(listName, JSON.stringify(newRetrivedTodos));
+            
+            // Delete todo in old list
+            var oldRetrivedTodos = JSON.parse(localStorage.getItem(oldListName));
+            for (let i = 1; i < oldRetrivedTodos.length; i++) {
+                let someTodo = [oldRetrivedTodos[i].checked, oldRetrivedTodos[i].text];
+                if(todoTxt === someTodo[1]) {
+                    oldRetrivedTodos.splice(i, 1);
+                }
+            }
+            localStorage.setItem(oldListName, JSON.stringify(oldRetrivedTodos))
+            
+            // Reload the page, to implement the change
             location.reload();
         });
 
@@ -79,21 +118,22 @@ window.onload = function() {
         sideNav.appendChild(listBtn);
     }
 
-    function showList(listName) {    
+    // show the list by generating a box at the page
+    function showList(listName) {
+        // Create box    
         var listBox = document.createElement("div");
         listBox.id=listName
 
+        // Add header to the box
         var header = document.createElement("H2");
         header.innerText = listName;
         listBox.appendChild(header);
 
-
-      
+        // Add box to page (listContainer)
         var listContainer = document.getElementById('listContainer');
         listContainer.appendChild(listBox);
 
         addInputBar(listName)
-
         showTodos(listName)
     }
 
@@ -142,7 +182,7 @@ window.onload = function() {
             let txt = todo[1];
             
             addCheckbox(listName, aTodo, txt, checked);
-            addInput(aTodo, txt);
+            addInput(listName, aTodo, txt, checked);
             addMenuButton(listName, aTodo, txt, checked);
 
             todoList.appendChild(aTodo);
@@ -179,40 +219,36 @@ window.onload = function() {
         listElement.appendChild(chbox);
     }
 
-    function addInput(listElement, input) {
+    function addInput(listName, listElement, input, status) {
         var txt = document.createTextNode(input);
         var p = document.createElement("p");
         p.id = "txt"
-        p.appendChild(txt); 
+        p.appendChild(txt);
+
+        p.draggable = true;
+        p.addEventListener("dragstart", function(e) {
+            e.dataTransfer.setData("txt", input);
+            e.dataTransfer.setData("status", status);
+            e.dataTransfer.setData("listName", listName);
+        });
+
         listElement.appendChild(p);
     } 
 
     function addMenuButton(listName, listElement, todo, status) {
-        var menuBtn = document.createElement("button");
-        menuBtn.type = "button";
-        menuBtn.class = "collapsible";
+        var menuBtn = document.createElement("div");
+        menuBtn.tabIndex = "0;"
         menuBtn.id = "menuBtn";
 
         var txt = document.createTextNode("menu");
         menuBtn.appendChild(txt);
 
-        menuBtn.addEventListener("click", function(){
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none";
-            } else {
-                content.style.display = "block";
-            }
-        });
-
-        listElement.appendChild(menuBtn);
-
         var menuContent = document.createElement("div");
         menuContent.class = "content"
         menuContent.id = "dropDown";
 
-        var edit = document.createElement("p");
+        var edit = document.createElement("div");
+        edit.id = "menuItem";
         var etxt = document.createTextNode("edit");
         edit.appendChild(etxt)
         edit.addEventListener("click", function() {
@@ -234,7 +270,8 @@ window.onload = function() {
         });
         menuContent.appendChild(edit);
 
-        var move = document.createElement("p");
+        var move = document.createElement("div");
+        move.id = "menuItem";
         var mtxt = document.createTextNode("move");
         move.appendChild(mtxt);
         move.addEventListener("click", function() {
@@ -249,7 +286,8 @@ window.onload = function() {
         });
         menuContent.appendChild(move);
 
-        var remove = document.createElement("p");
+        var remove = document.createElement("div");
+        remove.id = "menuItem";
         var rtxt = document.createTextNode("delete");
         remove.appendChild(rtxt);
         remove.addEventListener("click", function() {
@@ -266,89 +304,8 @@ window.onload = function() {
         });
         menuContent.appendChild(remove);
 
-        listElement.appendChild(menuContent);
-    }
+        menuBtn.appendChild(menuContent);
 
-
-
-/*
-    
-
-    var addBtn = document.getElementById("btnInsert"); 
-    addBtn.addEventListener("click", addToDo);
-
-    var input = document.getElementById("inpToDo");
-    input.addEventListener("keyup", function(event) {
-        if(event.keyCode === 13) {
-            event.preventDefault();
-            addBtn.click();
-        }
-
-
-    function addToDo() {
-        let key = document.getElementById("inpToDo").value;
-        let value = "unchecked"
-            
-        // check if the value is null: returns true if there is a value
-        if (key){
-            localStorage.setItem(key, value);
-            location.reload();
-        }
-    };
-
-    function addToList(input, status) {
-        var aToDo = document.createElement("li");
-        
-        addCheckbox(aToDo, status);
-        addInput(aToDo, input);
-        addDeleteButton(aToDo);
-
-        var theList = document.getElementById("todolist");
-        theList.appendChild(aToDo);
-    }
-
-    function addCheckbox(listElement, status) {
-        var chbox = document.createElement("input");
-        chbox.type = "checkbox";
-        chbox.id = "chbox"
-        if(status === "checked"){
-            chbox.checked = true;
-        }
-        chbox.addEventListener("click", function(e){
-            var key = e.target.nextElementSibling.innerText;
-            var value = localStorage.getItem(key);
-            console.log(key);
-            if(value === "unchecked") {
-                localStorage.setItem(key, "checked");
-            } else {
-                localStorage.setItem(key, "unchecked");
-            }   
-        });
-
-        listElement.appendChild(chbox);
-    }
-
-    function addInput(listElement, input) {
-        var txt = document.createTextNode(input);
-        var p = document.createElement("p");
-        p.id = "txt"
-        p.appendChild(txt); 
-        p.addEventListener("click", function(e) {
-            var oldtxt = e.target.innerText;
-            var newtxt = prompt("Change to do to", oldtxt);
-            if(newtxt) {
-                e.target.innerText = newtxt;
-
-                var status = localStorage.getItem(oldtxt);
-                localStorage.removeItem(oldtxt);
-                localStorage.setItem(newtxt, status);
-            };
-        });
-
-        listElement.appendChild(p);
-    }   
-
-   
-    */
-    
+        listElement.appendChild(menuBtn);
+    }    
 }
