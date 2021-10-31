@@ -1,11 +1,14 @@
+/* The page */
 body{
     background-color: #85AEDE;
 }
+/* When mouse hover button*/
 button:hover{
     cursor:pointer;
     background-color: grey;
 }
 
+/* Sidebar */
 #sidenav {
     height: 100%; 
     width: 165px; 
@@ -17,6 +20,7 @@ button:hover{
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px;
   }
+
 
 #inpNewList {
     border-radius: 4px;
@@ -114,6 +118,7 @@ button:hover{
     background-color: rgb(230, 230, 230);
 }
 
+/* When mouse hover button*/
 #menuItem:hover {
     background-color: grey;
 }
